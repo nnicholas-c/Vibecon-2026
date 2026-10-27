@@ -1,0 +1,123 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.17, pytest-9.1.1, pluggy-1.7.0 -- /root/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /app/backend
+configfile: pytest.ini
+plugins: platformdirs-4.13.5, asyncio-1.4.0, xdist-3.8.0, anyio-4.15.1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 85 items
+
+tests/test_drivepast_api.py::test_jrn1_business_and_units PASSED         [  1%]
+tests/test_drivepast_api.py::test_jrn2_van2_timeline PASSED              [  2%]
+tests/test_drivepast_api.py::test_jrn3_van4_last_stops PASSED            [  3%]
+tests/test_drivepast_api.py::test_jrn4_all_routes_feasible PASSED        [  4%]
+tests/test_drivepast_api.py::test_jrn5_stats_row PASSED                  [  5%]
+tests/test_drivepast_api.py::test_jrn6_dispatch_matches_unit_pages PASSED [  7%]
+tests/test_drivepast_api.py::test_jrn7_echo_chat_persists PASSED         [  8%]
+tests/test_drivepast_api.py::test_jrn8_suggested_prompts_differ PASSED   [  9%]
+tests/test_drivepast_api.py::test_jrn9_empty_message_rejected PASSED     [ 10%]
+tests/test_drivepast_api.py::test_jrn10_settings_defaults PASSED         [ 11%]
+tests/test_drivepast_api.py::test_jrn11_connection_rows FAILED           [ 12%]
+tests/test_drivepast_api.py::test_jrn12_save_persists PASSED             [ 14%]
+tests/test_drivepast_api.py::test_jrn13_speed_recomputes PASSED          [ 15%]
+tests/test_drivepast_api.py::test_jrn14_bad_input_rejected PASSED        [ 16%]
+tests/test_drivepast_api.py::test_jrn15_reset_keeps_team_numbers PASSED  [ 17%]
+tests/test_drivepast_api.py::test_jrn20_seed_contents PASSED             [ 18%]
+tests/test_drivepast_api.py::test_jrn21_learned_service_in_plan PASSED   [ 20%]
+tests/test_drivepast_api.py::test_jrn22_persistence_across_restart PASSED [ 21%]
+tests/test_phase2_engine.py::test_jrn24_engine_jobs_listing PASSED       [ 22%]
+tests/test_phase2_engine.py::test_jrn25_request1_winner_van2 PASSED      [ 23%]
+tests/test_phase2_engine.py::test_jrn26_handcheck_matches_added_cost PASSED [ 24%]
+tests/test_phase2_engine.py::test_jrn27_request2_same_day_oneoff PASSED  [ 25%]
+tests/test_phase2_engine.py::test_jrn28_request3_monthly_4x3x2 PASSED    [ 27%]
+tests/test_phase2_engine.py::test_jrn29_request4_past_shift_end_and_shift PASSED [ 28%]
+tests/test_phase2_engine.py::test_jrn30_request5_multistop PASSED        [ 29%]
+tests/test_phase2_engine.py::test_jrn31_request8_impossible_then_shift PASSED [ 30%]
+tests/test_phase2_engine.py::test_jrn32_request9_equals_request1_and_r10_approximate PASSED [ 31%]
+tests/test_phase2_engine.py::test_jrn33_engine_time_bounds PASSED        [ 32%]
+tests/test_phase2_engine.py::test_jrn34_reasons_whitelist PASSED         [ 34%]
+tests/test_phase2_engine.py::test_jrn35_what_if_read_only PASSED         [ 35%]
+tests/test_phase2_engine.py::test_jrn36_38_accept_undo_stale PASSED      [ 36%]
+tests/test_phase2_engine.py::test_jrn39_settings_drive_price PASSED      [ 37%]
+tests/test_phase2_engine.py::test_jrn40_speed_rebuilds_matrix PASSED     [ 38%]
+tests/test_phase2_engine.py::test_jrn41_demo_clock_affects_same_day PASSED [ 40%]
+tests/test_phase2_engine.py::test_jrn42_fleet_and_unit_stats PASSED      [ 41%]
+tests/test_phase2_engine.py::test_jrn43_bad_job_input PASSED             [ 42%]
+tests/test_phase3_maps.py::test_map_fleet_shape PASSED                   [ 43%]
+tests/test_phase3_maps.py::test_unit_timeline_has_latlon_and_seq[van-1] PASSED [ 44%]
+tests/test_phase3_maps.py::test_unit_timeline_has_latlon_and_seq[van-2] PASSED [ 45%]
+tests/test_phase3_maps.py::test_unit_timeline_has_latlon_and_seq[van-3] PASSED [ 47%]
+tests/test_phase3_maps.py::test_unit_timeline_has_latlon_and_seq[van-4] PASSED [ 48%]
+tests/test_phase3_maps.py::test_unit_timeline_has_latlon_and_seq[van-5] PASSED [ 49%]
+tests/test_phase3_maps.py::test_unit_timeline_has_latlon_and_seq[van-6] PASSED [ 50%]
+tests/test_phase3_maps.py::test_fleet_map_matches_timeline_for_all_vans PASSED [ 51%]
+tests/test_phase3_maps.py::test_engine_option_endpoint_for_show_on_map PASSED [ 52%]
+tests/test_phase3_maps.py::test_is_new_flag_after_accept_then_undo PASSED [ 54%]
+tests/test_phase4_options.py::TestOptionsReq01::test_cards_shape_and_labels PASSED [ 55%]
+tests/test_phase4_options.py::TestOptionsReq01::test_van2_price_11_monthly_231 PASSED [ 56%]
+tests/test_phase4_options.py::TestOptionsReq01::test_others_limits PASSED [ 57%]
+tests/test_phase4_options.py::TestOptionsReq01::test_price_band_never_above_usual_or_below_floor PASSED [ 58%]
+tests/test_phase4_options.py::TestOptionsReq01::test_perf_under_500ms PASSED [ 60%]
+tests/test_phase4_options.py::TestReq08Cap::test_preferred_shifted_delivery_capped_55 PASSED [ 61%]
+tests/test_phase4_options.py::TestReq08Cap::test_no_option_above_55_or_below_35 PASSED [ 62%]
+tests/test_phase4_options.py::TestLosesMoney::test_lower_usual_one_off_marks_draft PASSED [ 63%]
+tests/test_phase4_options.py::TestSettingsValidation::test_defaults_present PASSED [ 64%]
+tests/test_phase4_options.py::TestSettingsValidation::test_floor_above_usual_rejected_422 PASSED [ 65%]
+tests/test_phase4_options.py::TestFloorAndUsualTogether::test_set_usual_20_floor_15_req1_quotes_15 PASSED [ 67%]
+tests/test_phase4_options.py::TestAIConfig::test_save_secret_masked_everywhere PASSED [ 68%]
+tests/test_phase4_options.py::TestAIConfig::test_test_connection_fails_plainly_fast PASSED [ 69%]
+tests/test_phase4_options.py::TestStubLLM::test_stub_connect_and_read_tags_our_model FAILED [ 70%]
+tests/test_phase4_options.py::TestStubLLM::test_stub_delay_falls_back PASSED [ 71%]
+tests/test_phase4_options.py::TestStubLLM::test_stub_fail_falls_back PASSED [ 72%]
+tests/test_phase4_options.py::TestStubLLM::test_cleanup_clears_config PASSED [ 74%]
+tests/test_phase4_options.py::TestNoAIMode::test_no_ai_reads_without_crash PASSED [ 75%]
+tests/test_phase4_options.py::TestInboxReadAll::test_statuses_after_read_all PASSED [ 76%]
+tests/test_phase4_options.py::TestDecline::test_decline_req3 PASSED      [ 77%]
+tests/test_phase4_options.py::TestIncomingAndOpenAPI::test_incoming_text_creates_request PASSED [ 78%]
+tests/test_phase4_options.py::TestIncomingAndOpenAPI::test_openapi_exposes_new_endpoints_and_hides_stub PASSED [ 80%]
+tests/test_phase4_options.py::TestEngineRunAllOptions::test_run_all_has_options_and_perf PASSED [ 81%]
+tests/test_step1_reading.py::TestSeed14::test_14_seeded_requests_after_reset PASSED [ 82%]
+tests/test_step1_reading.py::TestAIConfigModels::test_defaults PASSED    [ 83%]
+tests/test_step1_reading.py::TestAIConfigModels::test_put_valid_values PASSED [ 84%]
+tests/test_step1_reading.py::TestAIConfigModels::test_invalid_reading_model_422 PASSED [ 85%]
+tests/test_step1_reading.py::TestAIConfigModels::test_invalid_reading_examples_422 PASSED [ 87%]
+tests/test_step1_reading.py::TestAIConfigModels::test_invalid_assistant_model_422 PASSED [ 88%]
+tests/test_step1_reading.py::TestReadAllFifteen::test_read_all_splits_req14_and_count_is_15 PASSED [ 89%]
+tests/test_step1_reading.py::TestReadAllFifteen::test_rereading_req14_does_not_duplicate PASSED [ 90%]
+tests/test_step1_reading.py::TestNewRequestsContent::test_req11_po_lakeshore_to_piedmont PASSED [ 91%]
+tests/test_step1_reading.py::TestNewRequestsContent::test_req12_reply_chain_thirdstreet_to_montgomery PASSED [ 92%]
+tests/test_step1_reading.py::TestNewRequestsContent::test_req13_whatsapp_elmwood_to_ashby PASSED [ 94%]
+tests/test_step1_reading.py::TestStandInLabel::test_stub_reads_and_tags_as_test_stand_in FAILED [ 95%]
+tests/test_step1_reading.py::TestStubHidden::test_openapi_hides_stub PASSED [ 96%]
+tests/test_step1_reading.py::TestStubHidden::test_stub_source_default_flag_off PASSED [ 97%]
+tests/test_step1_reading.py::TestOptionCardsNoSendAccept::test_price_result_does_not_include_send_accept_reject_fields PASSED [ 98%]
+tests/test_step4_email_mock.py::test_step4_mocked_google_gmail_journeys PASSED [100%]
+
+=================================== FAILURES ===================================
+__________________________ test_jrn11_connection_rows __________________________
+tests/test_drivepast_api.py:237: in test_jrn11_connection_rows
+    assert conns["our_model"]["detail"] == "Not set up yet"
+E   AssertionError: assert 'Saved, not connected yet' == 'Not set up yet'
+E     
+E     - Not set up yet
+E     + Saved, not connected yet
+____________ TestStubLLM.test_stub_connect_and_read_tags_our_model _____________
+tests/test_phase4_options.py:213: in test_stub_connect_and_read_tags_our_model
+    assert b.get("ok") is True, b
+E   AssertionError: {'ok': False, 'message': 'Something answered, but not at /v1/chat/completions. Check the address.', 'at': '2026-10-24T22:01:39.953266+00:00'}
+E   assert False is True
+E    +  where False = <built-in method get of dict object at 0xfb98faa8cb00>('ok')
+E    +    where <built-in method get of dict object at 0xfb98faa8cb00> = {'ok': False, 'message': 'Something answered, but not at /v1/chat/completions. Check the address.', 'at': '2026-10-24T22:01:39.953266+00:00'}.get
+__________ TestStandInLabel.test_stub_reads_and_tags_as_test_stand_in __________
+tests/test_step1_reading.py:167: in test_stub_reads_and_tags_as_test_stand_in
+    assert ai.get("level") == 1, ai
+E   AssertionError: {'level': 2, 'tag': 'backup', 'model': 'Claude Haiku 4.5', 'label': 'Built-in key', ...}
+E   assert 2 == 1
+E    +  where 2 = <built-in method get of dict object at 0xfb98fac33600>('level')
+E    +    where <built-in method get of dict object at 0xfb98fac33600> = {'level': 2, 'tag': 'backup', 'model': 'Claude Haiku 4.5', 'label': 'Built-in key', ...}.get
+------ generated xml file: /app/test_reports/pytest/iteration9_step4.xml -------
+=========================== short test summary info ============================
+FAILED tests/test_drivepast_api.py::test_jrn11_connection_rows - AssertionErr...
+FAILED tests/test_phase4_options.py::TestStubLLM::test_stub_connect_and_read_tags_our_model
+FAILED tests/test_step1_reading.py::TestStandInLabel::test_stub_reads_and_tags_as_test_stand_in
+=================== 3 failed, 82 passed in 103.13s (0:01:43) ===================

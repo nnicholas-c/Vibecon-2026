@@ -1,0 +1,36 @@
+{
+  "summary": "Step 1 (v2 work list) backend+frontend regression. Backend: full suite 69/69 PASS sequential (-n 0) in 118s + new /app/backend/tests/test_step1_reading.py (15/15 PASS, 14.9s). Verified REQ-246..262: 14 seeded requests after reset (open_count=14), AI config defaults reading_model=claude-haiku-4-5 / reading_examples=5 / assistant_model=claude-sonnet-5-5 / mode=auto / base_url=''; all four model keys (claude-haiku-4-5, claude-sonnet-5-5, gpt-5-5, gemini-3-flash) offered; PUT accepts gemini-3-flash / examples=0 / assistant=gpt-5-5 and persists; 422 for invalid reading_model, reading_examples=3, assistant_model='foo'. POST /api/inbox/read-all splits request 14 into two linked requests (req-14 part 1 of 2 and new req-15 part 2 of 2), pending inbox count = 15, each detail has group.part/of/keys cross-referenced. Re-reading req-14 does NOT duplicate (inbox count stays at 15). Requests 11 (Lakeshore Dental -> Piedmont Ave Lab 3pm weekdays), 12 (Third Street Print -> Montgomery Partners), 13 (Elmwood Pharmacy -> Ashby Medical Center WhatsApp) contain expected customers/addresses in details. Stand-in (DEV_STUB_ENABLED=true in preview .env, source-default 'false' in ai_api.py:99 verified by code read) answers at /api/dev/stub-llm/v1/chat/completions and tags the request as level=1 tag='test stand-in' label='Test stand-in', never 'our model'; last_answered reflects the same strings; OpenAPI hides /dev/stub-llm. Engine /engine/price result does not include send_url/accept_url/reject_url fields (REQ-262). Frontend (Chromium 1920x1080): /settings shows reading-model-select=claude-haiku-4-5, reading-examples-select=5, assistant-model-select=claude-sonnet-5-5, our-model-base-url-input blank, AI mode pill 'Auto' active; after reading req-01, ai-last-answered reads 'Last answered by: Built-in key · Claude Haiku 4.5 · 2.5 s · 7:50 PM'. /inbox: rail-inbox-count=14 initially, Read all requests completes in ~7-8s, count rises to 15, every row shows 'BACKUP' summary tag, statuses: req 1/2/3/5/10 Priced, 4/6/7/8/9 Needs info, 11/12/13 Priced, 14 and 15 Priced with inbox-row-part-14 '1 of 2' and inbox-row-part-15 '2 of 2'. Row 14 detail shows request-part '· 1 of 2' + request-linked-req-15 'See part 2'; Row 15 detail shows request-part '· 2 of 2' + request-linked-req-14 'See part 1' + body contains 'ashby', 'rockridge', 'fridays' (matches JRN-77 part 2: Rockridge Florist -> Ashby Medical Center Fridays 2pm from next week). Request pages contain zero Send/Accept/Reject buttons (REQ-262). Scanned Dispatch, Van 1..6, Inbox, Settings, Phones (placeholder shows 'Demo phones arrive in a later step.'): no occurrences of 'Haulix' or 'Phenomenon' in rendered innerText; grep of /app/frontend/src also returns 0 matches (Q-40=0). Request pages for req-01 priced via backup; Phase 4 regressions (test_phase4_options.py 23/23) still green. Demo state and AI config reset at the start and end of frontend tests.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_step1_reading.py",
+    "/app/backend/tests/test_phase4_options.py",
+    "/app/backend/tests/test_drivepast_api.py",
+    "/app/backend/tests/test_phase2_engine.py",
+    "/app/backend/tests/test_phase3_maps.py",
+    "/app/test_reports/pytest/iteration6_regression.xml",
+    "/app/test_reports/pytest/iteration6_step1.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ai_api.py:99 stub flag check uses os.environ.get('DEV_STUB_ENABLED', 'false') which is correct (defaults OFF). Preview .env sets DEV_STUB_ENABLED=true as expected. REQ-252 satisfied: before every production deploy this must be set to false or removed. Consider logging a one-line WARNING on startup when the flag is true so operators notice.",
+    "inbox_api.py:155 /api/inbox/read-all filter uses `seeded: {$ne: False}` and `number <= SEEDED_COUNT` (14). This correctly excludes previously-created linked parts (req-15 has seeded=False from new_request). Re-reads are safe because linked_part() looks up by parent_key+part before creating. Covered by test_rereading_req14_does_not_duplicate.",
+    "frontend inbox-row testids: row id uses the integer number (e.g. inbox-row-14) not the key (not inbox-row-req-14). This is inconsistent with request detail testids like request-linked-req-15. Not a bug but makes test selectors harder — consider standardising on key or exposing both.",
+    "ladder.py:102 record() correctly branches: `('test stand-in' if stub else 'our model') if level==1 else 'backup'` so when base_url contains STUB_PATH, every record is tagged 'test stand-in'. The stub is also never counted in scoring (code paths for Q-37/Q-39 use the tag directly).",
+    "pytest.ini still defaults to '-n 2 --dist loadscope'. Both new (test_step1_reading.py) and existing (test_phase4_options.py) suites mutate shared demo + AI config state and MUST be run with '-n 0'. Previous iteration flagged this; still open."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_step1_reading.py"
+  ],
+  "success_rate": {"backend": "100% (84/84 total: 69 regression + 15 step1)", "frontend": "100% on JRN-74..80 critical paths and REQ-246..262 verifications"},
+  "test_credentials": "No login. Stand-in via <BE>/api/dev/stub-llm, model 'stub-qwen', any secret. DEV_STUB_ENABLED=true in preview backend/.env.",
+  "seed_data_creation": "Built-in Bayline seed (14 requests). Demo + AI config reset at start and end.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Run as: `cd /app/backend && python -m pytest tests/ -v -n 0 --junitxml=/app/test_reports/pytest/next.xml` (xdist breaks on shared demo state). Row testids in Inbox use the integer request number (inbox-row-14, inbox-row-15) not the key — this is only hit when selecting from the Inbox list. Detail-pane testids use key (request-linked-req-15 etc.). Read all takes ~7-8 s with built-in key. Request 14 splits into req-14 (part 1 of 2) and req-15 (part 2 of 2); both have group={parent, part, of:2, keys:['req-14','req-15']}. Set AI config back to defaults (reading_model=claude-haiku-4-5, reading_examples=5, assistant_model=claude-sonnet-5-5, mode=auto, base_url='', clear_secret=true) at end of any test session.",
+  "rca of the issue": "N/A — no issues found. All step 1 requirements (REQ-246..262) and quality bars (Q-37..40) met in both API and UI."
+}

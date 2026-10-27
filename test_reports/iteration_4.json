@@ -1,0 +1,36 @@
+{
+  "summary": "Phase 3 Haulix re-skin regression. Backend: ran all three suites (test_drivepast_api.py + test_phase2_engine.py + test_phase3_maps.py) = 46/46 PASS sequentially. Frontend: verified rail dot colors match the new van palette (#60A5FA,#A78BFA,#F472B6,#22D3EE,#FB923C,#34D399) across all 6 vans; rail status text ('20 stops, X spare min') numbers match dispatch table cells (dispatch-stops-{k}, dispatch-spare-{k}) for every van; new pill chips (dispatch-chip-vans/stops/spare/ontime = 6 / 120 / 297 / 97.1%) match /api/stats/fleet aggregates; chat echo + chat-send-button disabled on empty / enabled on type / clears on send; Van 2 unit page shows 20 timeline rows, 20 map-marker-van-2-* markers, map-depot-van-2, '© OpenStreetMap contributors' attribution, popup content with name/address/arrival/window, unit-map-reset round control bottom-right; marker outerHTML carries `style=\"--pin:#A78BFA\"` confirming van-color propagation to the map pane while the dark filter stays on tiles only; Settings 'Settings' tab saves (settings-save-button shows 'Saved' via settings-save-status), reset-demo-data-button present, Engine test tab + engine-run-all-button yields winners + show-on-map navigates to /units/van-2?preview=<id> with 2 map-request-pin-N and the map-preview-banner 'Showing the proposed new stops (dashed line). Nothing is booked.' with Clear link. Map draw times measured 2-4ms (well below the 2s REQ-161 budget). Mobile 390x844 Page tab: no horizontal scroll (scrollWidth==clientWidth==390), map canvas renders 356px wide (16px gutters), fits after tab switch list->page, cost-per-stop and revenue cards reachable below the map (inner pane scroll). Contrast samples: app-wordmark rgb(244,244,245) on dark surface ~17:1; unit-chip rgb(185,187,193) on rgb(28,29,32) ~8.6:1; rail-unit-name white on dark ~17:1 — all >= 4.5:1. Demo data reset at start and end (both HTTP 200).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "pytest tests/ (parallel xdist default)", "issue": "4 tests fail intermittently when run with xdist -n auto due to shared /api/demo state races (test_jrn13_speed_recomputes, test_jrn36_38_accept_undo_stale, test_jrn42_fleet_and_unit_stats, test_jrn43_bad_job_input). All pass sequentially (-o addopts=''). Suggest removing `-n auto` default or marking state-mutating tests with @pytest.mark.serial and running them in a serial group."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_drivepast_api.py",
+    "/app/backend/tests/test_phase2_engine.py",
+    "/app/backend/tests/test_phase3_maps.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Low priority: reconfigure pytest default addopts to avoid xdist parallelism on stateful demo endpoints, OR split suites into serial/parallel groups so CI reflects the real green state (46/46)."
+  ],
+  "critical_code_review_comments": [
+    "pytest.ini currently defaults to xdist (-n auto) but tests share demo state via /api/demo/reset — flaky unless suites are serialized.",
+    "RouteMap still re-creates the Leaflet instance on each routes/proposal change (noted in iteration_3); still fine at 6 units but worth a layer-group diff.",
+    "Dispatch chip values are formatted with line breaks ('Vans:\\n6') — fine for the pill UI but tests that assert label/value need to split, consider separate testids for value spans."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (46/46 sequential)", "frontend": "100% on JRN-44..52 + Phase 1/2 regression"},
+  "test_credentials": "No login required.",
+  "seed_data_creation": "None. Demo reset executed at start and end (both 200).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Run `cd /app/backend && python -m pytest tests/ -v -o addopts='' --junitxml=/app/test_reports/pytest/pytest_results.xml` to avoid xdist races. Correct frontend testids (code-of-truth) differ slightly from the review-request wording: rail dots are rail-unit-dot-{k} (not rail-dot-{k}); chat send is chat-send-button (not chat-send); chat messages are chat-message-{i}; settings save is settings-save-button; engine run is engine-run-all-button. Van palette: van-1 #60A5FA, van-2 #A78BFA, van-3 #F472B6, van-4 #22D3EE, van-5 #FB923C, van-6 #34D399. Dispatch aggregate chips at 1440x900: 6 / 120 / 297 / 97.1%. Map draw time ~2-4ms. Mobile Page tab map width 356px at 390 viewport.",
+  "rca of the issue": "N/A — no functional issues. The parallel pytest flakes RCA: tests mutate shared singleton demo state (settings, jobs, clock) via /api/demo/reset per-test; xdist workers execute these tests concurrently, so one worker's reset wipes another worker's just-prepared state (e.g. test_jrn13 sees spare 50→50 instead of a decrease; test_jrn43 gets 502 because its job id was wiped mid-test; test_jrn42 gets an empty response). Mitigation: enforce serial execution for integration tests that depend on shared demo state."
+}

@@ -1,0 +1,28 @@
+{
+  "iteration": 3,
+  "passed": 6,
+  "failed": 2,
+  "retest_needed": true,
+  "bugs": [
+    {
+      "severity": "medium",
+      "title": "The request page and Inbox don't refresh after a backend change made elsewhere (Demo phone accept or decline, or the background read of a request that came in by text)",
+      "evidence": "flow-b-accept-by-text: after typing 'ok' on the Customer phone, the API had already booked the request (GET /api/inbox/req-04 -> status=accepted, quote.status=accepted; the Driver phone shows 'New stop today. Lakeshore Dental ... about 4:15pm'). The open request page still showed the status chip 'Quoted' and the quote as 'Sent', and its option cards were still listed, even though the 'Booked: Lakeshore Dental' bar was showing (screenshot flow-b-accept-by-text-failure.png). Same thing for the decline: the inbox-row-2 chip stayed 'Quoted' after the Customer phone declined, and it only showed Declined after a page reload. customer-text-and-ask-customer: GET /api/inbox/req-15 shows source=text, status=priced, 6 details, read_at set. The request page opened right after it was created kept showing 'Not read yet' for 60s.",
+      "suggested_fix": "After a phone accept or decline, reload the open request and the inbox list (for example by bumping a shared reload key in DemoPhones' afterBooking/act), or poll the request while a read or quote is pending."
+    }
+  ],
+  "action_items": [
+    {"type": "note", "detail": "JRN-88: the phone's typing indicator only appears before INCOMING messages. When the customer types a new request, nothing comes back, so no typing indicator shows. The journey expects one. Either add an incoming acknowledgement or clarify the journey."},
+    {"type": "improvement", "detail": "The Fleet map's default zoom at 1440x900 fits all vans, so the clusters are small and you can barely see the map tiles. The van icons, numbered stops, round controls, filter pills with counts and lime toggles are all there. The Van 2 page matches the reference well: a floating card with Stop 9 of 22, next stop, striped progress bar, a 91% Day used dial and a 50 Spare minutes tile, and the route in lime."}
+  ],
+  "checks": [
+    {"criterion": "JRN-83..90 API flows (accept by text, decline/reject, loss confirm, incoming text, stale slot)", "name": "e1_tests/test_tscheck_step2_quotes.py", "lane": "backend", "status": "passed", "evidence": "5 passed in 42s. POST /inbox/req-04/send 200 -> customer phone has 4:15pm and $35; POST /phones/customer/messages 'ok' 200 -> req-04 accepted; an unconfirmed loss send returns >=400; second accept -> quote.status=stale and 'filled up' text"},
+    {"criterion": "JRN-83 Flow B in the browser", "name": "flow-b-accept-by-text", "lane": "browser", "status": "failed", "evidence": "Van 4 4:15pm Preferred window card sent; the Customer phone shows 4:15pm and $35-$55; 'ok' accepted the quote and the Driver phone got the new stop. The request-page chip stayed 'Quoted' (expected Accepted) while the API said accepted."},
+    {"criterion": "JRN-84 Decline and JRN-85 Reject in the browser", "name": "decline-and-reject", "lane": "browser", "status": "passed", "evidence": "Decline on the Customer phone -> quote status Declined and the Owner phone notes it; inbox row 2 shows Declined only after a reload (see bug). Reject on request 1's option-0 replaced the card."},
+    {"criterion": "JRN-86 loses-money confirm in the browser", "name": "loss-confirm-cancel", "lane": "browser", "status": "passed", "evidence": "Saved usual one-off $40 (API confirmed 40); the confirm text 'This loses money at your usual price. Send anyway?' showed; Cancel -> no request-quote, API quote null; restored to $55"},
+    {"criterion": "JRN-88, JRN-89 customer phone text and Ask the customer", "name": "customer-text-and-ask-customer", "lane": "browser", "status": "failed", "evidence": "Ask the customer drafted 'is your delivery going to 1450 Broadway in Oakland or San Francisco?' and Send put it on the Customer phone. The customer text created req-15 (source text, raw text shown), but the page kept showing 'Not read yet' while the API had already read it. No typing indicator appeared (note)."},
+    {"criterion": "JRN-90 stale slot in the browser", "name": "stale-slot-second-accept", "lane": "browser", "status": "passed", "evidence": "Both Van 2 options sent; first accept OK; second accept -> 409 and Customer phone 'Sorry, that time just filled up'; request page 'This slot is no longer free. Price it again.' (checked after a reload)"},
+    {"criterion": "Step 2b look check (REQ-293 to REQ-306)", "name": "look-check-step2b", "lane": "browser", "status": "passed", "evidence": "Run through the preview URL (ingress). Top bar chips, search, bell count and 'Rosa Delgado · Owner' all present. Fleet map 556px tall at 900px (62%). Van 2 card has Stop N of M, next stop, progress bar, day dial and spare tile. No Haulix/Phenomenon/NaN/undefined text. Finished with Reset demo data from Settings."},
+    {"criterion": "Fixture/seed note", "name": "seed-state-reset", "lane": "backend", "status": "passed", "evidence": "These criteria require acting on the seeded demo requests; every check resets the demo first, and the last check ran Reset demo data (POST /api/demo/reset 200, 14 requests)."}
+  ]
+}

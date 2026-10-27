@@ -1,0 +1,27 @@
+{
+  "iteration": 1,
+  "passed": 11,
+  "failed": 0,
+  "bugs": [],
+  "action_items": [],
+  "notes": [
+    "The backend test_tscheck_chat posts 'tscheck-chat-*' messages to Van 2. Reset demo data cleared them at the end of the run.",
+    "The app was left at its defaults: Reset demo data was run, the team number was removed, and the API settings show wage 19.27 and no team numbers.",
+    "The East Bay speed change from 22 to 15 moved Van 2's later arrivals later (3:03pm to 3:05pm, 4:03pm to 4:04pm). Checked through the API.",
+    "Only console errors were the dev-server HMR websocket failures, plus the ERR_FAILED errors from the offline test, where API calls were blocked on purpose."
+  ],
+  "retest_needed": false,
+  "checks": [
+    {"criterion": "JRN-2/3/4/5/20/21 seed route shape, stats, contents, learned service", "name": "test_tscheck_seed_route.py::test_fleet_and_routes", "lane": "backend", "status": "passed", "evidence": "GET /api/fleet and /api/units/van-N returned 200. 6 vans, all arrivals inside their windows, return by 5:00pm, revenue equals the sum of stop prices, Van 2 Shattuck 830 and Telegraph 855, Van 6 lowest on-time."},
+    {"criterion": "JRN-20/21 seed contents and learned service", "name": "test_tscheck_seed_route.py::test_seed_contents_and_learned_service", "lane": "backend", "status": "passed", "evidence": "120 stops, 11 directory entries, 40 prospects within 300m, 10 'new' requests, 20 run-history weekdays per stop, service_minutes_used equals the run-history average."},
+    {"criterion": "JRN-7/8/9 echo chat", "name": "test_tscheck_chat.py", "lane": "backend", "status": "passed", "evidence": "POST /api/agents/van-2/messages returned 200 and the reply was 'Echo from Van 2: <msg>'. The Van 3 thread did not contain it. Spaces-only text was rejected with 4xx."},
+    {"criterion": "JRN-12/13/14 settings save, recompute, validation", "name": "test_tscheck_settings.py", "lane": "backend", "status": "passed", "evidence": "PUT cost_per_mile=-5 was rejected (4xx) and nothing changed. Wage 20 raised cost per stop for all vans with spare minutes unchanged. East Bay speed 15 lowered Van 2's spare minutes. Settings were restored afterwards."},
+    {"criterion": "JRN-1, JRN-6, JRN-18", "name": "rail-dispatch-switcher", "lane": "browser", "status": "passed", "evidence": "Tagline and Rosa Delgado shown, Inbox shows 10, 6 distinct dot colors, Dispatch stops and spare minutes match the rail and the Van 2 header (20/50), switcher has a single option, Bayline Courier."},
+    {"criterion": "JRN-2, JRN-3, JRN-4, JRN-5", "name": "unit-route-and-stats", "lane": "browser", "status": "passed", "evidence": "Van 2: Emeryville labs, Dev Patel, 5100 Shattuck at 1:50pm, 3000 Telegraph at 2:15pm, revenue $225. Van 4: Lakeshore at 3:50pm and Piedmont at 4:05pm. Van 6 on-time 91.2%. No NaN or undefined."},
+    {"criterion": "JRN-7, JRN-8, JRN-9", "name": "echo-chat", "lane": "browser", "status": "passed", "evidence": "Echo reply shown and still there after refresh. Van 3 thread is separate and its suggested prompt was echoed. Dispatch has 3 distinct prompts. Send is disabled for empty or spaces-only input."},
+    {"criterion": "JRN-10, JRN-11", "name": "settings-defaults-status", "lane": "browser", "status": "passed", "evidence": "All numeric defaults match, auto-send on, clock 10:00am, texting Off, no team numbers, Courier, demo date is today in LA. 4 status rows. No Anthropic or web search. Reset is enabled; 3 controls are disabled with 'Available in a later step'."},
+    {"criterion": "JRN-12, JRN-13, JRN-14", "name": "settings-save-recompute-validate", "lane": "browser", "status": "passed", "evidence": "Inline errors shown for blank wage and -5, nothing saved. Wage 20, clock 2:00pm and a team number showed 'Saved' and survived reload. Cost per stop rose with spare minutes unchanged. East Bay 15 lowered Van 2's spare minutes, consistent in rail, Dispatch table and header."},
+    {"criterion": "JRN-15, JRN-16, JRN-17, JRN-22", "name": "reset-cancel-placeholders", "lane": "browser", "status": "passed", "evidence": "Confirm text matches. Cancel changed nothing. 'Demo data reset' appeared and defaults were restored, team number kept, chat cleared, Van 2 back to 50 spare. Inbox and Phones placeholders correct. 6 vans after reload, no duplicate stops."},
+    {"criterion": "JRN-19, JRN-23, Q-10", "name": "mobile-tabs-friendly-errors", "lane": "browser", "status": "passed", "evidence": "Ran through the preview ingress URL at 390x844. List/Chat/Page tabs work for Van 2, no horizontal scroll. With the API blocked, the page shows 'Can't reach Drivepast right now. Try again in a moment.'"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "passed": 9, "failed": 0,
+  "bugs": [],
+  "action_items": [
+    {"type": "test_error", "severity": "low", "detail": "Phase 1 checks settings-defaults-status and reset-cancel-placeholders assert 'team-numbers-empty', but Reset demo data keeps team numbers by design (server.py:496), and earlier runs left a team number behind ('(510) 555-0199'). This is leftover test data, not an app bug. Clear the team numbers manually or update those checks."},
+    {"type": "note", "severity": "low", "detail": "Phase 2 engine criteria (8 matrix rows) are covered by one backend file with 8 tests (all passed) and 2 browser checks."}
+  ],
+  "retest_needed": true,
+  "checks": [
+    {"criterion": "JRN-24..43 all Phase 2 engine criteria (8 tests: jobs/reasons, R1/R9/R10, R2/R3/R5, R4/R8 window search, speed x3, what-if/accept/undo/stale, settings+demo clock, stats+bad input)", "name": "test_tscheck_engine_phase2.py", "lane": "backend", "status": "passed", "evidence": "8 passed. R1 Van 2 +8min 0.1mi $2.65, $11/$231; 8*19.27/60+0.1*0.76=2.645. R4 shifted Van 4 4:15pm; R8 Van 2 by 9:15am (+60 min). Accept -> 22 stops, Temescal 1:54pm; stale accept refused with 'This slot is no longer free. Price it again.'; undo restores identical arrivals; second undo 'Nothing to undo'. Floor 15 -> $15/$315; demo clock 4pm -> R2 'the window has already passed' on all vans. Empty job -> 422 'This job has no stops to price.'; reversed window -> 422 'ends before it starts'. All ms < 15."},
+    {"criterion": "JRN-24..34 Engine test UI (via preview URL)", "name": "engine-test-run-all", "lane": "browser", "status": "passed", "evidence": "10 summaries shown; 6/7 'Can't price yet'; after Run all, R1 explanation shows the $11/$231 line, R9 text identical to R1, R4 shifted line says 4:15pm, R8 shifted line says Van 2, no NaN/JSON on screen"},
+    {"criterion": "JRN-35 what-if UI saves nothing", "name": "engine-what-if-no-save", "lane": "browser", "status": "passed", "evidence": "from/to lines shown; Van 1 still has 20 stops, with s05 in place"},
+    {"criterion": "Phase 1 regression", "name": "rail-dispatch-switcher", "lane": "browser", "status": "passed", "evidence": "rerun passed"},
+    {"criterion": "Phase 1 regression", "name": "unit-route-and-stats", "lane": "browser", "status": "passed", "evidence": "rerun passed"},
+    {"criterion": "Phase 1 regression", "name": "settings-save-recompute-validate", "lane": "browser", "status": "passed", "evidence": "rerun passed"},
+    {"criterion": "Phase 1 regression", "name": "mobile-tabs-friendly-errors", "lane": "browser", "status": "passed", "evidence": "rerun passed"},
+    {"criterion": "Phase 1 regression", "name": "echo-chat", "lane": "browser", "status": "passed", "evidence": "rerun passed"},
+    {"criterion": "Phase 1 regression + Phase 1 backend suite", "name": "e1_tests phase1 files", "lane": "backend", "status": "passed", "evidence": "chat/seed_route/settings tests passed (12 total including the new ones)"},
+    {"criterion": "Phase 1 regression", "name": "settings-defaults-status", "lane": "browser", "status": "test_error", "evidence": "team-numbers-empty not found; a team number is left over from earlier runs and Reset keeps team numbers by design"},
+    {"criterion": "Phase 1 regression", "name": "reset-cancel-placeholders", "lane": "browser", "status": "test_error", "evidence": "same team-numbers residue"}
+  ]
+}

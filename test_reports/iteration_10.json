@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only UI-3D pass regression (JRN-140..150) at 1440x900 + 390x844 against https://drivepast-preview.preview.emergentagent.com. All MapLibre, 3D buildings, controls, stop/van markers, fleet legend/toggles, gauges, tiles-down fallback, reduced-motion, Leaflet fallback (dp-flat-map=1), mobile Van 2, and regression paths (demo entry, Inbox, Optimize route on van page, GET /api/openapi.json=200) PASS. Visual confirmation: dark 3D block grid with lime glowing route, 20 numbered DOM stop markers on Van 1/2, van PNG icon with heading, selected van halo, glossy tick-marked gauges intact (Day used 492/540, Spare 48min = 9% of shift on Van 2).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "RouteMap.jsx computes `const GL = hasWebGL();` once at module load. This correctly reads the dp-flat-map flag on first import, but if a user toggles the flag at runtime a full reload is needed. Acceptable for a dev-only override; worth a docstring if used by judges.",
+    "CityMap.jsx tile-fail detection uses a 12s timeout plus a sourcedata guard — observed to trigger correctly when **/tiles.openfreemap.org/** is blocked. The error overlay sits above the canvas and does not block the sr-only route spans or markers. Good.",
+    "CityMap.jsx 'reset' button restores pitch 55 and the fitted bearing (-22 for Van 1) rather than bearing 0. Journey copy says 'default tilted view that fits the whole route' — matches implementation (bearing is the fit's axis-bearing, not north). Confirm with product that this is intended; if 'default' should mean north=0 then adjust place()."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (not tested; GET /api/openapi.json=200)", "frontend": "100% across all 11 journeys tested"},
+  "test_credentials": "No login. localStorage.setItem('dp-demo-open','1') or click signin-demo-button.",
+  "seed_data_creation": "None. Default demo seed used (Bayline Courier, 6 vans).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "MapLibre maps settle ~3-5s after the 2.4s fly-in; always `wait_for_function` on `document.querySelector('[data-testid=\"unit-map-canvas\"]').dataset.drawn === 'true'` then wait ~2.5s more before reading data-pitch/zoom/bearing. Van page zoom is floored at 13.05 so after reset data-zoom===13.05 and data-pitch===55. Mobile 390x844: Van page uses mobile tabs — click [data-testid=mobile-tab-page] before expecting the map container to be visible. Leaflet fallback: engine attribute is absent (not 'maplibre'); route-* spans and markers render via SVG. Fleet map default zoom ~11.7 (buildings appear from z13+) — expected. Tiles-down waits up to 12s before showing map-tiles-error.",
+  "rca of the issue": "No issues found."
+}

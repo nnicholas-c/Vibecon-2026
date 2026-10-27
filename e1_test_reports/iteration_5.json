@@ -1,0 +1,19 @@
+{"passed": 9, "failed": 0, "retest_needed": false,
+"bugs": [],
+"action_items": [
+ {"type":"note","severity":"low","detail":"JRN-150: Inbox has no Gmail bar in the anonymous demo. GmailBar.jsx returns null unless Gmail is connected or expired, so this looks intended. The Inbox page and list load. Check that the spec agrees."},
+ {"type":"note","severity":"low","detail":"JRN-143: clicking a Fleet legend item opens the van page. Selection (lime route plus glow, others dimmed) happens on hover/focus or a van-icon click. The rail also opens the van page. The check used hover."},
+ {"type":"note","severity":"low","detail":"JRN-145: the chips have no Day used chip. The card's Day used (492 of 540 min, 91%) matches Spare 48 (540-492=48), and Spare matches the chip (48)."},
+ {"type":"note","severity":"low","detail":"Browser checks use the preview URL: localhost:3000 calls the preview API and fails on CORS because of the credentials plus wildcard origin. The regression check ran Optimize, Apply and Undo on seeded Van 2. Undo restored it, and the demo was reset afterwards."}
+],
+"checks": [
+ {"criterion":"JRN-150 Regression (API)","name":"test_tscheck_ui3d_regression.py","lane":"backend","status":"passed","evidence":"GET /api/openapi.json 200; POST /api/units/van-2/optimize/preview 200; van-1 spare 43, van-2 spare 48, 20 stops"},
+ {"criterion":"JRN-140 3D city on a van page","name":"ui3d-van2-city-3d","lane":"browser","status":"passed","evidence":"maplibre canvas visible; zoom 13.05 pitch 55; buildings fill-extrusion layer visible, 7 rendered features; map-route-van-2 data-lines=streets, selected"},
+ {"criterion":"JRN-141/143 Realistic vans and selection","name":"ui3d-fleet-vans-select","lane":"browser","status":"passed","evidence":"van-topdown.png loaded; marker transparent bg, 0 border, no shadow; rotateZ applied; hovering legend Van 3 sets van-3 to selected and van-1 to dimmed; glow layer renders only van-3; van icon is-selected"},
+ {"criterion":"JRN-142 Rotate/tilt/reset","name":"ui3d-map-reset-view","lane":"browser","status":"passed","evidence":"default z13.05 p55 b-48; after zoom-in and jumpTo z14.05 p10 b-120; after reset z13.05 p55 b-48"},
+ {"criterion":"JRN-144 Stop markers","name":"ui3d-van1-stop-markers","lane":"browser","status":"passed","evidence":"20 markers labelled 1-20; 20 timeline rows; seq 1 Feld Orthodontics matches API"},
+ {"criterion":"JRN-145 Card and toggles","name":"ui3d-card-and-toggles","lane":"browser","status":"passed","evidence":"gauge spare 48 = chip 48; Day used 91% (492/540); week shows 'Spare min this week 240'; Today restores 48; Show routes off hides routes and markers (0 rendered); Show van icons off hides 6 vans; both come back"},
+ {"criterion":"JRN-147 Phone view 390x844","name":"ui3d-phone-van2","lane":"browser","status":"passed","evidence":"scrollWidth 390 = innerWidth; map 16-374px; card 29-309px; no clipped text; spare value in viewport"},
+ {"criterion":"JRN-148/149 Tiles down and reduced motion","name":"ui3d-tiles-down-reduced-motion","lane":"browser","status":"passed","evidence":"openfreemap aborted; 'Map tiles unavailable' shown; 20 route features and 20 markers plus van drawn; no pageerrors; reduced motion: not moving at draw, zoom steady at 13.05"},
+ {"criterion":"JRN-150 Regression (UI)","name":"ui3d-regression-optimize-inbox-login","lane":"browser","status":"passed","evidence":"login shows Open the demo and Sign in with Google; Optimize shows 'Saves 0.2 mi and 0 min'; Apply then Undo restores; Inbox page and list load; openapi 200"}
+]}

@@ -1,0 +1,24 @@
+{
+  "summary": "Step 6 Memory rules + Activity feed, demo reset/openapi, landing smoke, and PART A2 restyle regression. Backend: 14/14 pytest in /app/backend/tests/test_step6_memory_activity.py PASS, plus reference script scripts/step6_rules_check.py PASS (9/9). Frontend: rail order correct (business name card -> Dispatch -> vans -> Inbox -> Memory -> Activity -> Settings -> Demo phones), /memory shows chips with -text/-kind/-state/-switch/-delete; switch toggle persists after reload (ON->OFF confirmed on reload); delete persists (chip gone after reload); /activity shows activity-page rows with -time/-actor/-line; after /api/demo/reset activity-empty renders with exact text 'Nothing has happened yet today.'. Request page: after Add-a-request paste (Clay St 3:15-4pm) + Ask the vans WITH active rule, data-testid=request-blocked-van-2 shows plain reason: \"Van 2 can't: your rule 'Don't send Van 2 downtown after 3'\". Landing /?e2e=1 at 1440x900 renders landing-page and all five price values ($1.28, $0.46, $3.48, $11.00, $11 a visit). Restyle regression: /dispatch, /units/van-2, /inbox, /settings all load with light paper background rgb(236,234,228), no lime detected, no error elements. GET /api/openapi.json = 200. /api/landing/price returns the exact required numbers. All backend criteria verified end-to-end.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_step6_memory_activity.py",
+    "/app/test_reports/pytest/step6_results.xml",
+    "/app/backend/scripts/step6_rules_check.py"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "activity.py uses key `business_key` on insert while every other collection in the codebase uses `business_id` (see core.BKEY usage in memory_api.py, agent_rules, requests). The activity list query filters with {} (no business filter) so this works today, but it's inconsistent and will bite the first time a multi-tenant filter is added — recommend standardising on `business_id`.",
+  "memory_api.event_view relies on string prefix check `'\"error\"' in e.get('result_summary')[:12]` to decide 'It didn't work.' — fragile against JSON that pretty-prints or leading whitespace. Prefer parsing result_summary as JSON and checking for an 'error' key.",
+    "memory_api.oid() parses /memory/rules/{id}; a 24-char hex that is a valid ObjectId but belongs to another business returns 404 only via the business_id filter in find_one_and_update — good. However oid() raises 404 for truly invalid ids via HTTPException inside a helper; it works but swallowing InvalidId in a dedicated dependency would be slightly cleaner.",
+    "parse_rule handles 'after 3' -> 15:00 using the 1<=h<=7 bare-hour rule; adding a unit test for 'after 10' (ambiguous AM/PM, currently stays 10:00) would catch future regressions."
+  ],
+  "updated_files": ["/app/backend/tests/test_step6_memory_activity.py"],
+  "success_rate": {"backend": "100% (14/14 pytest + 9/9 reference script)", "frontend": "100% on in-scope selectors (memory chips, activity rows, blocked row, rail order, landing e2e, restyle)"},
+  "test_credentials": "No login. localStorage.dp-demo-open=1 before load.",
+  "seed_data_creation": "Rules temporarily inserted directly into agent_rules via core.BKEY for frontend chip/toggle/delete tests and the request-blocked-van-2 scenario; cleared via POST /api/demo/reset at the end.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Reference script: cd /app/backend && set -a && . ./.env && set +a && PYTHONPATH=. python3 scripts/step6_rules_check.py (PASS). Pytest: cd /app/backend && set -a && . ./.env && set +a && PYTHONPATH=. python3 -m pytest tests/test_step6_memory_activity.py -o addopts= -v. Important: tests must be run sequentially (-o addopts= disables -n parallel) because they share the single-tenant agent_rules collection; parallel runs cause a cross-test race where list_rules sees a sibling test's rule. Not a product bug. Rail order asserted via DOM traversal — current implementation uses rail-dispatch-row (not rail-dispatch-link); accepted per spec since 'Dispatch' comes immediately after the business name card. The dispatch chat ('I couldn't reach the model' / 'Loading chat' / 'Practice chat') is an external LLM dependency and intentionally not tested."
+}

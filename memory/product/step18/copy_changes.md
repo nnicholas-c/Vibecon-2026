@@ -1,0 +1,106 @@
+# Step 18 copy changes (before → after)
+
+Kept unchanged per REQ-1201: landing copy from PROMPT.md, customer_line formats, the booked toast format, "Auto-sent within your rules", "Our usual price for this run is $55.", "Reading the request", "Pricing against N vans", Task 1 suggestion chips and assistant instruction text.
+
+- **Sign-in screen** (`frontend/src/components/drivepast/AuthGate.jsx`)
+  - before: The demo needs no account. Google sign-in connects your Gmail for real requests.
+  - after: You don't need an account for the demo. Sign in with Google only to get real requests from your Gmail.
+- **Chat, empty state** (`frontend/src/components/drivepast/ChatPane.jsx`)
+  - before: Say hello to {name}, or tap a suggestion below.
+  - after: Ask {name} about today's vans, or tap a question below.
+- **Chat header (old text was out of date: the agent answers for real)** (`frontend/src/components/drivepast/ChatPane.jsx`)
+  - before: Practice chat. Real answers arrive in a later step.
+  - after: Answers come from today's routes and prices.
+- **Chat error** (`frontend/src/components/drivepast/ChatPane.jsx`)
+  - before: The agent message didn't send.
+  - after: That message didn't send. Try again.
+- **/dev, Fire demo email** (`frontend/src/components/drivepast/DevPage.jsx`)
+  - before: The backup if the live email is slow on stage. It goes in as a Gmail request for Grand Ave, and the reply and confirmation go to the Customer demo phone, not to a real address.
+  - after: Use this if the live email is slow on stage. It comes in as a Gmail request for Grand Ave. The quote and the confirmation go to the Customer demo phone.
+- **/dev, Fire tricky email** (`frontend/src/components/drivepast/DevPage.jsx`)
+  - before: The mistake case: Lakeshore Dental asks for a 5pm pickup, but the office closes at 4:30. It goes in as a Gmail request and should show amber "Needs clarification" with 4:15pm offered. Nothing is emailed.
+  - after: Lakeshore Dental asks for a 5pm pickup, but the office closes at 4:30. It comes in as a Gmail request and should show amber "Needs clarification" with 4:15pm offered. Nothing gets emailed.
+- **Presenter note 1** (`frontend/src/components/drivepast/presenter/PresenterStrip.jsx`)
+  - before: Three vans, today's routes on the map, one stat strip. Nothing to set up.
+  - after: Three vans and today's routes are on the map, with the stats on top. Nothing to set up.
+- **Presenter note 2** (`frontend/src/components/drivepast/presenter/PresenterStrip.jsx`)
+  - before: A customer emails a pickup, a drop-off and a deadline. That's all they send.
+  - after: The customer's email only has a pickup, a drop-off and a deadline.
+- **Presenter note 3** (`frontend/src/components/drivepast/presenter/PresenterStrip.jsx`)
+  - before: No clicks: read, priced and quoted from the van that already passes.
+  - after: Nobody clicks anything. It gets read, priced from the van that already passes, and quoted.
+- **Presenter note 4** (`frontend/src/components/drivepast/presenter/PresenterStrip.jsx`)
+  - before: The price is lower because the van was already going there, not because of a discount.
+  - after: It's cheaper because the van was already going that way. There's no discount.
+- **Presenter note 5** (`frontend/src/components/drivepast/presenter/PresenterStrip.jsx`)
+  - before: The route redraws with the new stop, timed between its neighbours, tagged New.
+  - after: The route redraws. The new stop is timed between its neighbours and tagged New.
+- **Presenter note 6** (`frontend/src/components/drivepast/presenter/PresenterStrip.jsx`)
+  - before: Ask why it went there: the answer cites the added minutes and the pass-by.
+  - after: Ask why it went there. The answer gives the added minutes and where the van passes.
+- **Settings, Email and Google** (`frontend/src/components/drivepast/settings/EmailGoogle.jsx`)
+  - before: Real email for real requests. Seeded requests keep using the Demo phones.
+  - after: Connect Gmail to get real requests by email. Seeded requests still use the Demo phones.
+- **Settings, Our model** (`frontend/src/components/drivepast/settings/OurModel.jsx`)
+  - before: If it's blank or doesn't answer within 20 seconds, the built-in key reads instead, then the no-AI reader.
+  - after: If it's blank or takes over 20 seconds, the built-in key reads the request. If that fails too, the no-AI reader does.
+- **Settings, subtitle** (`frontend/src/components/drivepast/settings/SettingsPage.jsx`)
+  - before: Set your rules once. The van agents work inside them.
+  - after: Set your rules once. The van agents stick to them.
+- **Inbox, subtitle** (`frontend/src/components/drivepast/inbox/InboxPage.jsx`)
+  - before: Every request, read and checked.
+  - after: Every request that came in, and what we read from it.
+- **Inbox, Gmail line (second half)** (`frontend/src/components/drivepast/inbox/GmailBar.jsx`)
+  - before: {st.line} New emails are read automatically.
+  - after: {st.line} New emails get read and priced on their own.
+- **Inbox, Gmail line (first half)** (`backend/google_api.py`)
+  - before: and watch it get priced."
+  - after: and it gets priced."
+- **Request, question box (old text was out of date: Ask the customer sends now)** (`frontend/src/components/drivepast/inbox/RequestPage.jsx`)
+  - before: Question for the customer (sending comes later)
+  - after: Question for the customer
+- **Rail, no vans** (`frontend/src/components/drivepast/Rail.jsx`)
+  - before: Vans will show here once Drivepast is reachable.
+  - after: Vans show up here once Drivepast is back online.
+- **Morning Brief, late line** (`frontend/src/components/drivepast/MorningBrief.jsx`)
+  - before: Most often late: <span className="font-medium text-[var(--dp-ink)]">{late.name}</span>, {late.late_runs} of {late.total_runs} past
+        stops ({lateShare}%) arrived over {brief.late_after_plan_minutes} min after plan.
+  - after: <span className="font-medium text-[var(--dp-ink)]">{late.name}</span> runs late most often. {late.late_runs} of its last {late.total_runs}
+        stops ({lateShare}%) came in over {brief.late_after_plan_minutes} min behind plan.
+- **Research, finding 1 answer** (`frontend/src/landing/Research.jsx`)
+  - before: Drivepast is built for these small fleets: a few vans, an inbox and a spreadsheet, no dispatch team.
+  - after: Drivepast is for these small fleets, the ones with a few vans and an inbox but nobody whose job is dispatch.
+- **Research, finding 4 answer** (`frontend/src/landing/Research.jsx`)
+  - before: Emails are read and priced in seconds, and can be sent automatically within your rules.
+  - after: New emails are read and priced as soon as they arrive, and the quote can go out on its own within your rules.
+- **Research, sheet label** (`frontend/src/landing/Research.jsx`)
+  - before: >Plain words<
+  - after: >Sources<
+- **Research, intro** (`frontend/src/landing/Research.jsx`)
+  - before: What we found about small courier fleets, and the part of Drivepast that answers each finding.
+  - after: What we found about small courier fleets, and what Drivepast does about each finding.
+- **Booking confirmation to customers** (`backend/phones_api.py`)
+  - before: f"Booked. {q['unit_name']} picks up about {q['pickup_label']}{drop}. Price {money_text(q['price'])}."
+  - after: f"You're booked. {q['unit_name']} picks up around {q['pickup_label']}{drop}. The price is {money_text(q['price'])}."
+- **Booking confirmation, drop-off part** (`backend/phones_api.py`)
+  - before: f" and drops off about {q['dropoff_label']}"
+  - after: f" and drops off around {q['dropoff_label']}"
+- **Customer quote page, after Accept** (`backend/google_api.py`)
+  - before: f"Booked. {q['unit_name']} will be there around {q['pickup_label']}."
+  - after: f"You're booked. {q['unit_name']} will be there around {q['pickup_label']}."
+- **Assistant prompt, style line added (REQ-1202)** (`backend/agent.py`)
+  - before: the tool will match it.")
+  - after: the tool will match it. "
+                "Talk like a dispatcher to the owner: short plain sentences, numbers first, no filler.")
+- **Old check script, expected Gmail line** (`backend/scripts/step4_mock_check.py`)
+  - before: and watch it get priced.")
+  - after: and it gets priced.")
+- **Customer demo phone, auto reply** (`backend/phones_api.py`)
+  - before: Thanks! We're pricing that now.
+  - after: Thanks. We're pricing that now.
+- **Settings, demo controls not yet built** (`frontend/src/components/drivepast/settings/Controls.jsx`)
+  - before: Available in a later step
+  - after: Not built yet
+- **Settings, connection status, nearby businesses** (`backend/server.py`)
+  - before: Using the 40 built-in nearby businesses. Live data loads in a later step.
+  - after: Using the 40 built-in nearby businesses. Live business data isn't connected yet.

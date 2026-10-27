@@ -1,0 +1,11 @@
+{"passed":7,"failed":0,"retest_needed":false,"bugs":[],
+"action_items":[{"type":"stale_tests","severity":"low","detail":"Older-phase backend tests (test_tscheck_engine_phase2.py x3, test_tscheck_seed_route.py, test_tscheck_settings.py) fail against step2 seed (14 requests vs 10, changed usual price $14 floor). Not in this matrix; they look outdated, not new regressions. Please confirm and update or retire them."},
+{"type":"note","severity":"low","detail":"WebSocket console error ws://localhost:443/ws is dev-server HMR noise, so it was ignored. Live refreshes happened within ~6s with no reload."}],
+"checks":[
+{"criterion":"Step2 quote API","name":"e1_tests/test_tscheck_step2_quotes.py","lane":"backend","status":"passed","evidence":"5 passed in 36s"},
+{"criterion":"JRN-83 Flow B UI refresh","name":"flow-b-accept-by-text","lane":"browser","status":"passed","evidence":"Sent the Van 4 4:15pm $35 option, then typed 'ok'. Without a reload the request status and inbox row 4 changed to Accepted, the driver phone showed Lakeshore, and the Van 4 timeline showed 4:15pm."},
+{"criterion":"JRN-84 Decline chip refresh","name":"decline-chip-refresh","lane":"browser","status":"passed","evidence":"After Decline on the customer phone, inbox-row-status-2 and request-status showed Declined within 6s with no reload."},
+{"criterion":"JRN-88 customer text","name":"customer-text-live-refresh","lane":"browser","status":"passed","evidence":"phone-customer-typing was visible, then 'Thanks! We're pricing that now.' appeared. The rail inbox count went up live and the new row 15 appeared with no reload. Its details showed College."},
+{"criterion":"JRN-89 ask customer","name":"customer-text-and-ask-customer","lane":"browser","status":"passed","evidence":"The drafted question was sent and appeared on the customer phone."},
+{"criterion":"JRN-81/82 Flow A + Undo","name":"flow-a-accept-undo","lane":"browser","status":"passed","evidence":"After Accept on the $11 Van 2 option, Accepted showed with no reload and Van 2 had 22 stops. After Undo it had 20 stops and the driver phone showed 'Change cancelled'. Ended with a demo reset."},
+{"criterion":"Decline + reject regression","name":"decline-and-reject","lane":"browser","status":"passed","evidence":"Rerun passed."}]}

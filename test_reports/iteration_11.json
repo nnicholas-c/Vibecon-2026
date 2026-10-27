@@ -1,0 +1,31 @@
+{
+  "summary": "UI-3D Revision 1 frontend validation at 1440x900 + 390x844 on https://drivepast-preview.preview.emergentagent.com covering JRN-151..155 and all regression paths. 10/11 journey assertions PASS. One real bug found: scroll-wheel zoom on /units/van-* does NOT unfollow (data-follow stays 'true') even though the map zooms out. Root cause: MapLibre fires 'zoomstart' from scroll-zoom WITHOUT originalEvent; the guard `(e) => e.originalEvent && unfollow()` in CityMap.jsx therefore never triggers for wheel. Zoom buttons, drag, and right-drag unfollow correctly. All other JRNs pass: close-up zoom 16.50 / pitch 55 / data-follow=true on open, reset returns to close-up, bearing follows van heading, mobile card collapsed by default with correct slim row & toggle, desktop card never collapsed, Fleet uses dp-van-mini markers with data-heading, legend and toggles work, fleet-selected-card appears on van click, tiles-blocked shows map-tiles-error, Leaflet fallback via dp-flat-map renders routes, GET /api/openapi.json = 200.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "CityMap.jsx (unit page follow)", "issue": "Scroll-wheel zoom-out does not break follow mode. zoom changes from 16.50 to ~14.49 but data-follow remains 'true'. Observed via instrumented events: zoomstart has originalEvent=null on wheel-zoom (MapLibre only passes originalEvent on zoomend for wheel). Journey JRN-152 explicitly requires scroll-out -> data-follow='false'.", "selector": "[data-testid=unit-map-canvas]", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Fleet /", "issues": ["dp-van-mini bounding rect measured ~20.5x11.8px — the dot+arrow glyph combined. Requirement states 16px dot. If strict 16px is intended, verify CSS; visually markers look correctly small."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix wheel-zoom unfollow in /app/frontend/src/components/drivepast/CityMap.jsx. Options: (a) also listen to DOM 'wheel' on canvas container to call unfollow(), (b) hook map.scrollZoom via map.on('wheel', ...) which MapLibre fires with the raw wheel event, or (c) relax the guard to call unfollow on zoomstart when the map is in a follow state and the user clearly interacted (e.g., any zoomstart that is not caused by our own easeTo/jumpTo — track user-initiated flag). Smallest change: add `map.on('wheel', unfollow)`.",
+    "Optional: confirm Fleet .dp-van-mini width if 16px is strict spec."
+  ],
+  "critical_code_review_comments": [
+    "CityMap.jsx line 189 relies on `e.originalEvent` to detect user intent for unfollow; MapLibre does not include originalEvent on 'zoomstart' for scroll-zoom (confirmed via live instrumentation). Prefer listening to the raw DOM 'wheel' event or map.on('wheel', ...).",
+    "VanDetailCard.jsx has TWO elements with data-testid='van-detail-stop-count' — one in the collapsed row (span inside van-detail-collapsed-summary) and one inside van-detail-body (<p>). Duplicate testids will break Playwright strict selectors; harmless here only because exactly one is rendered at a time, but better to rename the inner one (e.g., van-detail-stop-count-detail).",
+    "closeUp() returns a view centered off-center from the van (anchored by `w-tx, h-ty`) to leave space for the detail card — this means the van icon is intentionally not screen-centered; works but the requirement text says 'centered on the van' — current render places the van near lower-middle-right which matches the expected card-aware layout; worth confirming with product."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (openapi.json=200)", "frontend": "~95% (1 real bug: scroll-wheel does not unfollow)"},
+  "test_credentials": "No login. localStorage dp-demo-open=1.",
+  "seed_data_creation": "None (default demo seed).",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "The scroll-wheel unfollow bug is reproducible by: open /units/van-2 at 1440x900, wait >5s after data-drawn, then Playwright mouse.wheel from map center -> data-follow stays 'true' while zoom decreases. Use `const m = document.querySelector('[data-testid=unit-map-canvas]').dpMap; m.on('zoomstart', e=>console.log(!!e.originalEvent))` to verify — originalEvent is null for wheel zoomstart. Keyboard/zoom button/drag all unfollow correctly. For re-tests after fix: just re-run the scroll section of this iteration.",
+  "rca of the issue": "File: /app/frontend/src/components/drivepast/CityMap.jsx (line ~189). Code: `[\"dragstart\",\"zoomstart\",\"rotatestart\",\"pitchstart\"].forEach((ev) => map.on(ev, (e) => e.originalEvent && unfollow()));`. MapLibre's scrollZoom handler emits zoomstart without the originalEvent property (originalEvent is only attached on zoomend for wheel). Therefore wheel-triggered zoomstart passes the guard check with falsy originalEvent and unfollow() is never called. Mitigation: add `map.on('wheel', () => unfollow());` after the forEach — MapLibre fires 'wheel' with the raw WheelEvent before any zoom animation."
+}

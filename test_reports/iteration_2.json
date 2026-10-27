@@ -1,0 +1,26 @@
+{
+  "summary": "Drivepast Phase 2 (pricing engine) testing. Added /app/backend/tests/test_phase2_engine.py (18 tests) covering JRN-24..JRN-43. Re-ran Phase 1 regression (/app/backend/tests/test_drivepast_api.py, 18 tests). Combined 36/36 pass. Playwright UI run on Settings > Engine test confirmed JRN-24 (10 cards, 6 and 7 can't-price), JRN-25 (Van 2 winner badge, $11/visit, $231/month, correct explanation and pass-by line '5100 Shattuck at 1:50pm'), JRN-26 (hand-check line '8 min x $0.3212 + 0.1 mi x $0.76 = $2.65'), JRN-27 market line, JRN-29 shifted line '4:15pm instead of 5:00pm' on Van 4, JRN-33 ms rendered, JRN-35 what-if controls present, and plain-words 'Can't: no room | in San Francisco until 3:55pm' reasons rendered. Demo data was reset at start and end.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_drivepast_api.py",
+    "/app/backend/tests/test_phase2_engine.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "engine_api.py store_options caps engine_options collection by deleting rows beyond 500 using an unindexed sort on created_at + skip; harmless at demo scale but add an index for production.",
+    "price_job returns full `results` list after calling store_options which mutates `r['option_id']` in-place; good for the frontend but means `option_id` is stored even on infeasible rows via `results` list is actually filtered to feasible+shifted-winner only, so OK.",
+    "engine_accept uses data_lock but recompute_unit after insert happens inside the lock; fine. However the stale check compares base_keys of the current day_stops to opt['base_keys'] - this correctly refuses a second accept of the same option_id (because the day's keys now include the newly added q-* keys). Verified in JRN-38.",
+    "Minor: EngineTest.jsx reads results keyed by request_key; if the backend returns a request as not-priceable the result is still stored but won't render extra details - correct behavior.",
+    "stats_for computes compute_route per unit per weekday (5x6 = 30 route computations per /api/stats/fleet call) - fine at this scale."
+  ],
+  "updated_files": ["/app/backend/tests/test_phase2_engine.py"],
+  "success_rate": {"backend": "100% (36/36 across phase1+phase2)", "frontend": "100% on JRN-24,25,26,27,29,33,35 UI elements probed"},
+  "test_credentials": "No login required.",
+  "seed_data_creation": "No new seed. Both pytest modules reset demo at session/module start and end. Final /api/demo/reset executed; inbox=10, demo clock 10:00am.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Run `cd /app/backend && python -m pytest tests/ -n 0 -v --junitxml=/app/test_reports/pytest/pytest_results.xml`. Two Phase 2 assertion notes: (a) After accept->undo, Van 2 arrival times restore to within <0.5 min of the pre-accept plan (not bit-exact due to float math in recompute); the test uses a 0.5-minute tolerance - user-visible labels are identical. (b) For JRN-40 the East Bay 15 mph change on request 1 affects `added_driving_minutes_exact` (0.28 -> higher) but may not shift the integer `added_minutes` because service minutes dominate; the test asserts the exact-driving field and the pickup arrival moves, which match the spec intent ('the driving part and arrival times change'). Phase 2 API shape: price response has `winner_unit_key`, `winner` (full option incl. explanation/pass_by/hand_check/monthly_total/market_line), `results[]` and `shifted{found, winner}`; option_id lives on each feasible result and on shifted.winner. request_keys are 'req-01'..'req-10'.",
+  "rca of the issue": "N/A - no issues found."
+}

@@ -1,0 +1,263 @@
+{
+ "1": {
+  "van": "Van 2",
+  "price": 11.0,
+  "usual": 14.0,
+  "added_min": 8,
+  "added_mi": 0.1,
+  "pickup": "1:54pm",
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest + Preferred window",
+    "Van 2",
+    11.0,
+    "1:54pm"
+   ],
+   [
+    "Soonest",
+    "Van 1",
+    14.0,
+    "1:45pm"
+   ]
+  ]
+ },
+ "2": {
+  "van": "Van 3",
+  "price": 35.0,
+  "usual": 55.0,
+  "added_min": 12,
+  "added_mi": 1.4,
+  "pickup": "10:00am",
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest",
+    "Van 3",
+    35.0,
+    "10:00am"
+   ],
+   [
+    "Soonest",
+    "Van 3",
+    35.0,
+    "10:00am"
+   ],
+   [
+    "Preferred window",
+    "Van 1",
+    55.0,
+    "11:34am"
+   ]
+  ]
+ },
+ "3": {
+  "van": "Van 3",
+  "price": 14.0,
+  "usual": 14.0,
+  "added_min": 66,
+  "added_mi": 20.3,
+  "pickup": "11:00am",
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest + Soonest + Preferred window",
+    "Van 3",
+    14.0,
+    "11:00am"
+   ]
+  ]
+ },
+ "4": {
+  "van": null,
+  "price": null,
+  "usual": null,
+  "added_min": null,
+  "added_mi": null,
+  "pickup": null,
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest",
+    "Van 3",
+    35.0,
+    "4:17pm"
+   ],
+   [
+    "Soonest + Preferred window",
+    "Van 3",
+    35.0,
+    "4:15pm"
+   ]
+  ]
+ },
+ "5": {
+  "van": "Van 2",
+  "price": 14.0,
+  "usual": 14.0,
+  "added_min": 31,
+  "added_mi": 4.1,
+  "pickup": "3:00pm",
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest + Soonest + Preferred window",
+    "Van 2",
+    14.0,
+    "3:00pm"
+   ]
+  ]
+ },
+ "6": {
+  "van": null,
+  "price": null,
+  "usual": null,
+  "added_min": null,
+  "added_mi": null,
+  "pickup": null,
+  "reason": "The five delivery addresses in Montclair are missing, so there's nothing to place on a route yet.",
+  "cards": []
+ },
+ "7": {
+  "van": null,
+  "price": null,
+  "usual": null,
+  "added_min": null,
+  "added_mi": null,
+  "pickup": null,
+  "reason": "The city is unclear: there's a 1450 Broadway and a Mission St in both Oakland and San Francisco.",
+  "cards": []
+ },
+ "8": {
+  "van": null,
+  "price": null,
+  "usual": null,
+  "added_min": null,
+  "added_mi": null,
+  "pickup": null,
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest + Preferred window",
+    "Van 1",
+    55.0,
+    "8:09am"
+   ],
+   [
+    "Soonest",
+    "Van 2",
+    55.0,
+    "8:09am"
+   ]
+  ]
+ },
+ "9": {
+  "van": "Van 2",
+  "price": 11.0,
+  "usual": 14.0,
+  "added_min": 8,
+  "added_mi": 0.1,
+  "pickup": "1:54pm",
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest + Preferred window",
+    "Van 2",
+    11.0,
+    "1:54pm"
+   ],
+   [
+    "Soonest",
+    "Van 1",
+    14.0,
+    "1:45pm"
+   ]
+  ]
+ },
+ "10": {
+  "van": "Van 1",
+  "price": 14.0,
+  "usual": 14.0,
+  "added_min": 34,
+  "added_mi": 7.9,
+  "pickup": "11:35am",
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest",
+    "Van 1",
+    14.0,
+    "11:35am"
+   ],
+   [
+    "Soonest + Preferred window",
+    "Van 2",
+    14.0,
+    "11:30am"
+   ]
+  ]
+ },
+ "11": {
+  "van": null,
+  "price": null,
+  "usual": null,
+  "added_min": null,
+  "added_mi": null,
+  "pickup": null,
+  "reason": "Read this request first.",
+  "cards": []
+ },
+ "12": {
+  "van": null,
+  "price": null,
+  "usual": null,
+  "added_min": null,
+  "added_mi": null,
+  "pickup": null,
+  "reason": "Read this request first.",
+  "cards": []
+ },
+ "13": {
+  "van": null,
+  "price": null,
+  "usual": null,
+  "added_min": null,
+  "added_mi": null,
+  "pickup": null,
+  "reason": "Read this request first.",
+  "cards": []
+ },
+ "14": {
+  "van": null,
+  "price": null,
+  "usual": null,
+  "added_min": null,
+  "added_mi": null,
+  "pickup": null,
+  "reason": "Read this request first.",
+  "cards": []
+ },
+ "15": {
+  "van": "Van 2",
+  "price": 35.0,
+  "usual": 55.0,
+  "added_min": 10,
+  "added_mi": 0.9,
+  "pickup": "10:00am",
+  "reason": null,
+  "cards": [
+   [
+    "Cheapest + Soonest",
+    "Van 2",
+    35.0,
+    "10:00am"
+   ],
+   [
+    "Preferred window",
+    "Van 1",
+    35.0,
+    "11:30am"
+   ]
+  ]
+ }
+}

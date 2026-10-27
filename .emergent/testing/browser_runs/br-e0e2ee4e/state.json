@@ -1,0 +1,1 @@
+{"run_id":"br-e0e2ee4e","status":"error","script_path":"","page_url":"http://localhost:3000/about","started_at":1792888507.7688344,"owner_session_id":null,"case_ids":[],"purpose":"test","session":null,"shard":"","run_kind":"full","owner_run_id":"","report_sequence":null,"evidence_root":"/app/.emergent/testing","finished_at":1792888517.7491858,"error_category":"browser_cancelled"}

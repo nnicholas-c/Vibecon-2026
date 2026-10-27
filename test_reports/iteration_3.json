@@ -1,0 +1,33 @@
+{
+  "summary": "Drivepast Phase 3 (design pass + Leaflet/OSM maps) tested end-to-end. Added /app/backend/tests/test_phase3_maps.py (10 tests) covering GET /api/map/fleet, GET /api/engine/options/{id}, unit timeline lat/lon, map-vs-timeline parity across all 6 vans, and is_new flag after accept->undo. Re-ran /app/backend/tests/test_drivepast_api.py (18) and /app/backend/tests/test_phase2_engine.py (18). Combined 46/46 pass. Playwright UI run verified JRN-44..52: Van 2 unit map (20 numbered markers + depot, polyline in #7C3AED, '© OpenStreetMap contributors' attribution, popup with name/address/arrival/window, drawn in ~4ms); Dispatch fleet-map (6 distinct colored polylines, 6 legend items, Van 5 click navigates to /units/van-5, drawn in ~9ms); Engine test 'Show on map' navigates to /units/van-2?preview=<id>, renders map-request-pin-0/1 with dashed paths and the 'Showing the proposed new stops (dashed line). Nothing is booked.' banner while leaving Van 2 at 20 stops; booked stops after /api/engine/accept show 22 markers with 2 is-new (markers 16 and 18 after re-sequencing), and /api/engine/undo restores 20 markers with 0 is-new; blocking tile.openstreetmap.org still draws lines+markers and shows 'Map tiles couldn't load. Routes are still shown.' via map-tiles-error; at 390x844 Page tab, document scrollWidth equals clientWidth (no horizontal scroll) and the map fits width (358px with 16px gutters). Demo data was reset at the start and end.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Van 2 map after accept", "issues": ["JRN-49 copy says 'markers 21/22 are New' but the engine inserts the new pickup/dropoff mid-route, so after re-sequencing the New markers end up at mid-route seqs (observed 16 and 18) rather than 21/22. REQ-166 only requires markers to match timeline position (verified) so behavior is correct, but the journey copy is misleading."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_drivepast_api.py",
+    "/app/backend/tests/test_phase2_engine.py",
+    "/app/backend/tests/test_phase3_maps.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "RouteMap.jsx tile failure detection fires only if `failed>=2 && loaded===0`. Any single successful tile anywhere in the viewport will prevent the error banner even if 90% of tiles fail; this is still spec-compliant (REQ-177 is 'if tiles fail to load') but a stricter ratio-based threshold would be more honest.",
+    "RouteMap.jsx re-creates the entire Leaflet map on every `routes`/`proposal` change (useEffect depends on both). For single-unit page this is fine, but updating a proposal re-paints the whole route; could be optimized with a layer group diff.",
+    "RouteMap.jsx uses an inline <div> popup string with manual HTML escape helper `esc`. OK, but consider React-leaflet Popup if more content is added later.",
+    "engine_api.map_fleet calls today_plans + unit_stops in a loop per unit without parallelism; harmless at 6 units but easy to parallelize with asyncio.gather.",
+    "RouteMap.jsx uses `dragging: !L.Browser.mobile` which disables dragging on desktop touch devices (Chrome on a Surface, iPads in desktop mode). Consider using `L.Browser.touch` only to toggle `touchZoom` and keep dragging always on."
+  ],
+  "updated_files": ["/app/backend/tests/test_phase3_maps.py"],
+  "success_rate": {"backend": "100% (46/46 across phase1+phase2+phase3)", "frontend": "100% on JRN-44..52 critical paths"},
+  "test_credentials": "No login required.",
+  "seed_data_creation": "No new seed data. test_phase3_maps.py resets demo at module start and end; final /api/demo/reset was executed by UI run (inbox=10, demo_clock=10:00am).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Run `cd /app/backend && python -m pytest tests/ -v --junitxml=/app/test_reports/pytest/pytest_results.xml` (46 tests, ~45s). Phase 3 adds /api/map/fleet (6 units with start_location/end_location and ordered stops carrying key/seq/lat/lon/name/address/arrival_label/window_label/is_new) and /api/engine/options/{id} (returns option_id, unit_key, sequence, new_stops with lat/lon/kind/arrival_label - excludes job/nodes/_id). Unit timeline rows now carry lat/lon and the unit object carries start_location/end_location with lat/lon. UI testids: unit-map, unit-map-canvas (data-drawn, data-drawn-ms), map-marker-van-N-<seq>, map-depot-van-N (dp-depot class), map-request-pin-<i> (dp-pin.is-request class), dp-pin.is-new for booked stops, dispatch-fleet-map, dispatch-fleet-map-canvas, map-legend-item-van-N, map-preview-banner, map-preview-clear, map-tiles-error, fleet-map-loading, fleet-map-error, engine-show-on-map-<n>, engine-show-on-map-<n>-shifted. Mobile tabs: mobile-tab-list, mobile-tab-chat, mobile-tab-page. Settings 'Engine test' is a tab text-button inside /settings (not a URL param).",
+  "rca of the issue": "N/A - no issues found. One journey/behavior copy mismatch noted: JRN-49 text 'markers 21/22' doesn't match actual insertion behavior; map correctly matches timeline per REQ-166."
+}

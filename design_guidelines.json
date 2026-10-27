@@ -1,0 +1,289 @@
+{
+  "project_name": "Drivepast - Phase 1",
+  "tagline": "Every van gets an agent that sells its own empty minutes.",
+  "client_business": "Bayline Courier",
+  "owner_name": "Arthur Pendelton",
+  "design_archetype": "Calm, professional dispatch software",
+  "typography": {
+    "font_family_body": "Inter, system-ui, -apple-system, sans-serif",
+    "font_family_heading": "Plus Jakarta Sans, Inter, system-ui, sans-serif",
+    "font_variant_numeric": "tabular-nums",
+    "letter_spacing_headings": "tracking-tight",
+    "heading_h1": "text-2xl font-bold tracking-tight text-slate-900",
+    "heading_h2": "text-xl font-semibold tracking-tight text-slate-900",
+    "heading_h3": "text-lg font-semibold text-slate-900",
+    "body_text": "text-sm text-slate-700 leading-relaxed",
+    "caption_text": "text-xs text-slate-500",
+    "time_format": "h:mm a (e.g., '1:50pm')"
+  },
+  "colors": {
+    "background_main": "#F8FAFC",
+    "surface_card": "#FFFFFF",
+    "surface_border": "#E2E8F0",
+    "text_primary": "#0F172A",
+    "text_secondary": "#64748B",
+    "text_muted": "#94A3B8",
+    "accent_deep_green": "#0F5257",
+    "accent_deep_green_light": "#E6F4F1",
+    "accent_amber": "#D97706",
+    "accent_amber_light": "#FEF3C7",
+    "accent_red": "#DC2626",
+    "accent_red_light": "#FEE2E2",
+    "van_route_colors": [
+      {
+        "id": "van_101",
+        "name": "Van 101",
+        "hex": "#2563EB",
+        "bg_soft": "#EFF6FF",
+        "label": "Electric Blue"
+      },
+      {
+        "id": "van_102",
+        "name": "Van 102",
+        "hex": "#059669",
+        "bg_soft": "#ECFDF5",
+        "label": "Emerald Mint"
+      },
+      {
+        "id": "van_103",
+        "name": "Van 103",
+        "hex": "#D97706",
+        "bg_soft": "#FFFBEB",
+        "label": "Amber Ochre"
+      },
+      {
+        "id": "van_104",
+        "name": "Van 104",
+        "hex": "#7C3AED",
+        "bg_soft": "#F5F3FF",
+        "label": "Royal Violet"
+      },
+      {
+        "id": "van_105",
+        "name": "Van 105",
+        "hex": "#DB2777",
+        "bg_soft": "#FDF2F8",
+        "label": "Coral Magenta"
+      },
+      {
+        "id": "van_106",
+        "name": "Van 106",
+        "hex": "#0891B2",
+        "bg_soft": "#ECFEFF",
+        "label": "Teal Cyan"
+      }
+    ]
+  },
+  "layout_strategy": {
+    "desktop_breakpoint": "768px",
+    "desktop_panes": {
+      "left_rail": {
+        "width": "260px",
+        "bg": "#FFFFFF",
+        "border": "border-r border-slate-200",
+        "sections": [
+          "Header (Business switcher: Bayline Courier, 6 active vans)",
+          "Dispatch Pinned Row with Fleet icon",
+          "FLEET AGENTS (6 unit rows with color dots, names, nicknames, 'N stops, M spare min')",
+          "Inbox badge (count: 3)",
+          "Phones row",
+          "Settings row (pinned at bottom)",
+          "Fictional Owner Watermark: Arthur Pendelton (Owner)"
+        ]
+      },
+      "center_pane": {
+        "width": "340px",
+        "bg": "#F8FAFC",
+        "border": "border-r border-slate-200",
+        "sections": [
+          "Echo Agent Chat header",
+          "Transcript message thread with timestamps ('1:50pm')",
+          "3 Suggested prompts chips ('Sell 30 spare min on Van 101', 'Check Van 103 capacity', 'Show today\\'s total revenue')",
+          "Interactive chat prompt input with submit"
+        ]
+      },
+      "right_pane": {
+        "flex": "flex-1",
+        "bg": "#F8FAFC",
+        "sections": [
+          "Unit Page OR Dispatch Page OR Settings Page OR Inbox/Phones Placeholder"
+        ]
+      }
+    },
+    "mobile_layout": {
+      "tab_bar": "3 Tabs: ['List', 'Chat', 'Page']",
+      "list_tab": "Left rail fleet list & settings links",
+      "chat_tab": "Center echo chat experience",
+      "page_tab": "Active Unit / Dispatch / Settings page content"
+    }
+  },
+  "page_specifications": {
+    "unit_page": {
+      "header_card": {
+        "fields": ["Van Name", "Nickname", "Driver Name & Avatar", "Stops Today Count", "Spare Minutes Left Badge", "Live Agent Status Pill"]
+      },
+      "timeline_card": {
+        "title": "Today's Schedule & Delivery Windows",
+        "item_fields": ["Arrival Time (e.g., 1:50pm)", "Customer Name", "Street Address", "Time Window Badge (e.g., 1:30pm - 2:15pm)", "Stop Type (Pickup / Delivery / Agent-Sold Stop)"]
+      },
+      "stats_row": {
+        "metrics": [
+          {"label": "Cost per Stop", "data_testid": "unit-stat-cost-per-stop", "format": "$8.20/stop"},
+          {"label": "Revenue per Day", "data_testid": "unit-stat-revenue-per-day", "format": "$420.00/day"},
+          {"label": "On-time Rate (4 wks)", "data_testid": "unit-stat-ontime-rate", "format": "98.4%"}
+        ]
+      }
+    },
+    "dispatch_page": {
+      "header_summary": {
+        "total_vans": 6,
+        "total_spare_min": 210,
+        "daily_revenue": "$2,840.00"
+      },
+      "fleet_table": {
+        "data_testid": "dispatch-units-table",
+        "columns": [
+          "Van & Nickname",
+          "Driver",
+          "Stops",
+          "Spare Min",
+          "Revenue / Day",
+          "Cost / Stop",
+          "Agent Status",
+          "Actions"
+        ]
+      }
+    },
+    "settings_page": {
+      "fields": [
+        {"id": "base-hourly-rate", "label": "Base Driver Hourly Rate ($)", "type": "number", "default": 24.50},
+        {"id": "fuel-surcharge", "label": "Fuel Cost Surcharge ($/mile)", "type": "number", "default": 0.65},
+        {"id": "extra-stop-fee", "label": "Minimum Fee per New Stop ($)", "type": "number", "default": 18.00},
+        {"id": "travel-speed", "label": "Average Travel Speed (mph)", "type": "number", "default": 22},
+        {"id": "minutes-per-stop", "label": "Minutes Allocated per New Stop", "type": "number", "default": 15},
+        {"id": "auto-send-toggle", "label": "Auto-send Agent Deals", "type": "switch", "default": true},
+        {"id": "demo-date", "label": "Demo Date (Read-only)", "type": "input", "readOnly": true, "default": "Oct 14, 2026"},
+        {"id": "demo-clock", "label": "Demo Clock (Editable)", "type": "input", "default": "1:50pm"},
+        {"id": "real-texting-toggle", "label": "Real Texting Mode", "type": "switch", "default": false, "subtext": "Off (Simulated local network)"},
+        {"id": "text-channel", "label": "SMS Channel", "type": "select", "default": "Twilio Sandbox (Demo)"},
+        {"id": "team-numbers", "label": "Team Phone Numbers List", "type": "list", "default": ["+1 (555) 019-2831 (Dispatch)", "+1 (555) 012-8843 (Dave - Van 101)"]},
+        {"id": "business-type", "label": "Business Type", "type": "input", "readOnly": true, "default": "Courier"}
+      ],
+      "connection_status_rows": [
+        {"name": "Our Model", "status": "Not set up yet", "badge": "grey", "note": "using fallback"},
+        {"name": "Backup AI", "status": "Emergent universal key", "badge": "green", "note": "Active"},
+        {"name": "OpenStreetMap Data", "status": "Connected", "badge": "green", "note": "Routing operational"},
+        {"name": "Real Texting", "status": "Disabled", "badge": "amber", "note": "Demo mode active"}
+      ],
+      "demo_controls": {
+        "reset_demo_button": {
+          "label": "Reset demo data",
+          "enabled": true,
+          "data_testid": "reset-demo-data-button",
+          "requires_confirmation": true
+        },
+        "disabled_buttons": [
+          {"label": "Import external CSV", "tooltip": "Available in a later step"},
+          {"label": "Clear route history", "tooltip": "Available in a later step"},
+          {"label": "Sync Telematics", "tooltip": "Available in a later step"}
+        ]
+      }
+    },
+    "inbox_page": {
+      "data_testid": "inbox-page",
+      "placeholder_title": "Courier Agent Inbox",
+      "placeholder_message": "All customer inquiries and automated ETA notifications are processed automatically by your 6 van agents. No manual intervention needed right now."
+    },
+    "phones_page": {
+      "data_testid": "phones-page",
+      "placeholder_title": "Dispatch VoIP & Phone Center",
+      "placeholder_message": "Line active: +1 (555) 019-2831. Automatic SMS text channels are online for all 6 vans."
+    }
+  },
+  "image_urls": {
+    "van_driver_avatars": [
+      {
+        "van_id": "van_101",
+        "driver": "Dave Miller",
+        "url": "https://images.unsplash.com/photo-1787624078559-c06446fdd85e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwzfHxkZWxpdmVyeSUyMHZhbiUyMGRlbGl2ZXJ5JTIwZHJpdmVyJTIwY291cmllciUyMGxvZ2lzdGljc3xlbnwwfHx8fDE3OTI4NjM3NjZ8MA&ixlib=rb-4.1.0&q=85",
+        "alt": "Dave in delivery vehicle"
+      },
+      {
+        "van_id": "van_102",
+        "driver": "Sarah Jenkins",
+        "url": "https://images.unsplash.com/photo-1764792314927-a82d9996285f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwyfHxkZWxpdmVyeSUyMHZhbiUyMGRlbGl2ZXJ5JTIwZHJpdmVyJTIwY291cmllciUyMGxvZ2lzdGljc3xlbnwwfHx8fDE3OTI4NjM3NjZ8MA&ixlib=rb-4.1.0&q=85",
+        "alt": "Sarah delivering package"
+      },
+      {
+        "van_id": "van_103",
+        "driver": "Marcus Vance",
+        "url": "https://images.unsplash.com/photo-1769477145932-edd5a9d7567c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwxfHxkZWxpdmVyeSUyMHZhbiUyMGRlbGl2ZXJ5JTIwZHJpdmVyJTIwY291cmllciUyMGxvZ2lzdGljc3xlbnwwfHx8fDE3OTI4NjM3NjZ8MA&ixlib=rb-4.1.0&q=85",
+        "alt": "Marcus loading truck"
+      },
+      {
+        "van_id": "van_104",
+        "driver": "Elena Rostova",
+        "url": "https://images.pexels.com/photos/6169129/pexels-photo-6169129.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "alt": "Elena driving van with GPS"
+      },
+      {
+        "van_id": "van_105",
+        "driver": "Kenji Sato",
+        "url": "https://images.pexels.com/photos/6169579/pexels-photo-6169579.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "alt": "Kenji stepping out of van"
+      },
+      {
+        "van_id": "van_106",
+        "driver": "Carlos Gomez",
+        "url": "https://images.unsplash.com/photo-1791777831440-dbc4d8b2b60d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHw0fHxkZWxpdmVyeSUyMHZhbiUyMGRlbGl2ZXJ5JTIwZHJpdmVyJTIwY291cmllciUyMGxvZ2lzdGljc3xlbnwwfHx8fDE3OTI4NjM3NjZ8MA&ixlib=rb-4.1.0&q=85",
+        "alt": "Carlos on express delivery route"
+      }
+    ]
+  },
+  "testing_and_data_attributes": {
+    "rule": "Every button, input, tab, card, and metric MUST have a clear kebab-case data-testid attribute.",
+    "key_testids": [
+      "business-switcher",
+      "nav-dispatch-link",
+      "nav-inbox-link",
+      "nav-phones-link",
+      "nav-settings-link",
+      "unit-row-van-101",
+      "unit-row-van-102",
+      "unit-row-van-103",
+      "unit-row-van-104",
+      "unit-row-van-105",
+      "unit-row-van-106",
+      "chat-prompt-chip-1",
+      "chat-prompt-chip-2",
+      "chat-prompt-chip-3",
+      "chat-input",
+      "chat-submit-button",
+      "unit-header-title",
+      "unit-timeline-container",
+      "unit-stat-cost-per-stop",
+      "unit-stat-revenue-per-day",
+      "unit-stat-ontime-rate",
+      "dispatch-units-table",
+      "settings-form",
+      "settings-demo-clock-input",
+      "reset-demo-data-button",
+      "reset-demo-confirm-dialog",
+      "reset-demo-confirm-button",
+      "mobile-tab-list",
+      "mobile-tab-chat",
+      "mobile-tab-page"
+    ]
+  },
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Use calm, professional dispatch styling with light background (#F8FAFC) and near-black text (#0F172A).",
+    "Use deep green (#0F5257) as the single primary accent color for positive outcomes, revenues, and agent wins.",
+    "Use amber (#D97706) for warnings or spare minute constraints.",
+    "Use red (#DC2626) strictly for 'can't do it' or impossible constraints.",
+    "Apply tabular numbers (`font-variant-numeric: tabular-nums`) to all prices, times, stop counts, and statistics.",
+    "Format all times in plain friendly format like '1:50pm'.",
+    "Ensure the layout strictly honors the 3-pane structure on desktop and tab switcher on mobile (<768px).",
+    "Ensure owner watermark 'Arthur Pendelton (Owner)' is visible in a corner.",
+    "Ensure all interactive elements have data-testid attributes for E2E automated testing."
+  ]
+}
